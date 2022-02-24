@@ -7,6 +7,9 @@ package views;
 
 import controller.MedicoTableModel;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import modelo.Medico;
+import modelo.dao.MedicoDao;
 import views.utils.BaseFormulario;
 
 /**
@@ -15,14 +18,17 @@ import views.utils.BaseFormulario;
  */
 public class MedicoView extends BaseFormulario{
     private MedicoTableModel medicoTableModel;
+    private MedicoDao medicoDao;
+    private Medico medico;
     /**
      * Creates new form MedicoView
      */
     public MedicoView() {
         initComponents();
-        medicoTableModel=new MedicoTableModel(new ArrayList<>());
-        jTableMedico.setModel(medicoTableModel);
-        habilitar(false);
+        medicoDao=new MedicoDao(); //cria o objeto de persistencia
+        medicoTableModel=new MedicoTableModel(new ArrayList<>()); //cria o modelo para a tabela
+        jTableMedico.setModel(medicoTableModel); //seta o modelo na tabela
+        habilitar(false); //inicia o formulário com os campo bloqueados
     }
 
     /**
@@ -100,6 +106,11 @@ public class MedicoView extends BaseFormulario{
         });
 
         btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
 
         btnExcluir.setText("Excluir");
 
@@ -240,13 +251,31 @@ public class MedicoView extends BaseFormulario{
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         // TODO add your handling code here:
-        habilitar(true);
-        jTextFieldNome.requestFocus();
+        habilitar(true); //desbloqueia os campos do formulário
+        jTextFieldNome.requestFocus(); //foca no campo nome do médico
+        medico=new Medico(); //cria novo medico
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         habilitar(false);
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        try {
+            //verifica os campos obrigatórios
+            validarCamposFormulario();
+            //Confirmação do usuário
+            int op = JOptionPane.showConfirmDialog(rootPane, "Confirmar a operação?",
+                    "Salvando registro", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+            if(op==JOptionPane.YES_OPTION){
+                medico.setNome(jTextFieldNome.getText());
+                medico.setCRM(jTextFieldCRM.getText());
+                medico.setEspecializacao(jComboBoxEspecializacao.getSelectedItem().toString());
+                medico.setTelefone(jFormattedTextFieldTelefone.getText());
+            }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -275,6 +304,7 @@ public class MedicoView extends BaseFormulario{
     // End of variables declaration//GEN-END:variables
 
 
+    //Bloqueia ou desbloqueia os campos do formulário
     public void habilitar(boolean  b){
         jTextFieldNome.setEnabled(b);
         jTextFieldCRM.setEnabled(b);
@@ -285,5 +315,24 @@ public class MedicoView extends BaseFormulario{
         btnSalvar.setEnabled(b);
         btnExcluir.setEnabled(b);
         btnCancelar.setEnabled(b);
+    }
+    
+    //Verifica se o usuário preencheu corretamente os campos obrigatórios
+    public void validarCamposFormulario() throws Exception{
+        
+        if(jTextFieldNome.getText()==null || jTextFieldNome.getText().trim().equals("")
+                || jTextFieldNome.getText().trim().isEmpty()){
+            throw new Exception("O Campo nome é obrigatório!");
+        }
+        if(jTextFieldCRM.getText()==null || jTextFieldCRM.getText().trim().equals("")
+                || jTextFieldCRM.getText().trim().isEmpty()){
+            throw new Exception("O CRM é obrigatório!");
+        }
+        if(jFormattedTextFieldTelefone.getText().equals("(  )     -    ")){
+            throw new Exception("Informe o telefone");
+        }
+        if(jDateChooserDataAdmissao.getDate()==null){
+            
+        }
     }
 }
