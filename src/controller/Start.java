@@ -21,6 +21,7 @@ public class Start {
             for(Usuario u : dao.buscarTodos()){
                 System.out.println("Nome: "+u.getNome());
                 System.out.println("Permissão: "+u.getPermissaoUsuario());
+                System.out.println("Apenas Test");
             }
             
         } catch (RuntimeException ex) {
