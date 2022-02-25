@@ -7,6 +7,8 @@ package views;
 
 import com.sun.javafx.scene.layout.region.Margins;
 import com.toedter.calendar.JDateChooser;
+import controller.AgendamentoTableMoldelMedico;
+import controller.MedicoComboBox;
 import controller.MedicoTableModel;
 import java.awt.Component;
 import java.text.ParseException;
@@ -19,8 +21,12 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import static jdk.nashorn.internal.objects.NativeError.printStackTrace;
+import modelo.Agendamento;
 import modelo.Medico;
+import modelo.dao.AgendamentoDao;
 import modelo.dao.MedicoDao;
+import modelo.utils.MesEnum;
+import modelo.utils.StatusAgendamento;
 import views.utils.BaseFormulario;
 import views.utils.DataConverte;
 
@@ -30,7 +36,10 @@ import views.utils.DataConverte;
  */
 public class MedicoView extends BaseFormulario {
 
+    private final MedicoComboBox modelComboBox;
+    private final AgendamentoDao AGE_DAO = new AgendamentoDao();
     private MedicoTableModel medicoTableModel;
+    private AgendamentoTableMoldelMedico agendamentoTableMoldelMedico;
     private MedicoDao medicoDao;
     private Medico medico;
 
@@ -40,8 +49,13 @@ public class MedicoView extends BaseFormulario {
     public MedicoView() {
         initComponents();
         medicoDao = new MedicoDao(); //cria o objeto de persistencia
+        modelComboBox = new MedicoComboBox(medicoDao.buscarTodos());
+
         medicoTableModel = new MedicoTableModel(medicoDao.buscarTodos()); //cria o modelo para a tabela
+        agendamentoTableMoldelMedico = new AgendamentoTableMoldelMedico(new ArrayList<Agendamento>());
         jTableMedico.setModel(medicoTableModel); //seta o modelo na tabela
+        jTableAgendamento.setModel(agendamentoTableMoldelMedico);
+        cbMedico.setModel(modelComboBox);
         habilitar(false); //inicia o formulário com os campo bloqueados
     }
 
@@ -75,6 +89,11 @@ public class MedicoView extends BaseFormulario {
         btnExcluir = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableAgendamento = new javax.swing.JTable();
+        cbMedico = new javax.swing.JComboBox();
+        jComboBoxStatus = new javax.swing.JComboBox();
+        jComboBoxMesSelecionado = new javax.swing.JComboBox();
         jPanel3 = new javax.swing.JPanel();
 
         jLabel1.setText("Código");
@@ -160,7 +179,7 @@ public class MedicoView extends BaseFormulario {
                         .addComponent(btnExcluir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelar)
-                        .addGap(304, 322, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -231,16 +250,71 @@ public class MedicoView extends BaseFormulario {
 
         jTabbedPane1.addTab("Cadastro", jPanel1);
 
+        jTableAgendamento.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTableAgendamento);
+
+        cbMedico.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbMedico.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbMedicoItemStateChanged(evt);
+            }
+        });
+
+        jComboBoxStatus.setModel(new javax.swing.DefaultComboBoxModel(StatusAgendamento.values()));
+        jComboBoxStatus.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxStatusItemStateChanged(evt);
+            }
+        });
+
+        jComboBoxMesSelecionado.setModel(new javax.swing.DefaultComboBoxModel(MesEnum.values()));
+        jComboBoxMesSelecionado.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxMesSelecionadoItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 736, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(cbMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxMesSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxStatus, 0, 180, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 549, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cbMedico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBoxMesSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBoxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cbMedico, jComboBoxStatus});
 
         jTabbedPane1.addTab("Agendamentos", jPanel2);
 
@@ -248,7 +322,7 @@ public class MedicoView extends BaseFormulario {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 736, Short.MAX_VALUE)
+            .addGap(0, 718, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -262,8 +336,9 @@ public class MedicoView extends BaseFormulario {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jTabbedPane1)
-                .addGap(0, 0, 0))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -299,19 +374,19 @@ public class MedicoView extends BaseFormulario {
                 medico.setTelefone(jFormattedTextFieldTelefone.getText());
                 medico.setDataAdmissao(DataConverte.getLocalDate(jDateChooserDataAdmissao.getDate()));
                 System.out.println(medico.getDataAdmissao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-                String mensagem="";
+                String mensagem = "";
                 if (medico.getId() != null) {
 
                     if (medicoDao.atualizar(medico)) {
-                        mensagem="Registro atualizado com sucesso!";
+                        mensagem = "Registro atualizado com sucesso!";
                     }
 
                 } else {
                     if (medicoDao.salvar(medico)) {
-                        mensagem="Novo registro salvo com sucesso!";
+                        mensagem = "Novo registro salvo com sucesso!";
                     }
                 }
-                JOptionPane.showMessageDialog(rootPane, mensagem,"Cadastro de médico", 
+                JOptionPane.showMessageDialog(rootPane, mensagem, "Cadastro de médico",
                         JOptionPane.INFORMATION_MESSAGE);
                 medicoTableModel.adicionar(medico);
                 medico = null;
@@ -319,7 +394,7 @@ public class MedicoView extends BaseFormulario {
                 limparTela();
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Desculpe houve uma falha\n"+e.getMessage(),
+            JOptionPane.showMessageDialog(rootPane, "Desculpe houve uma falha\n" + e.getMessage(),
                     title, JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
@@ -343,24 +418,38 @@ public class MedicoView extends BaseFormulario {
                 return;
             }
             habilitar(true); //habilita os campos para edição
-            
+
+        } else {
+            agendamentoTableMoldelMedico.setLista(new ArrayList<>());
         }
     }//GEN-LAST:event_jTableMedicoMouseClicked
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         //Exigir confirmação do usuário
         int op = JOptionPane.showConfirmDialog(rootPane, "Deseja realmente excluir o registro selecionado\n"
-                + medico.getNome().toUpperCase()+" ?",
+                + medico.getNome().toUpperCase() + " ?",
                 title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if(medicoDao.remover(medico)){
+        if (medicoDao.remover(medico)) {
             JOptionPane.showMessageDialog(rootPane, "Registro excluido com sucesso!",
-                    title,JOptionPane.INFORMATION_MESSAGE);
+                    title, JOptionPane.INFORMATION_MESSAGE);
             medicoTableModel.remover(medico);
-            medico=null;
+            medico = null;
             habilitar(false);
             limparTela();
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void cbMedicoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbMedicoItemStateChanged
+        pesquisar();
+    }//GEN-LAST:event_cbMedicoItemStateChanged
+
+    private void jComboBoxMesSelecionadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxMesSelecionadoItemStateChanged
+        pesquisar();
+    }//GEN-LAST:event_jComboBoxMesSelecionadoItemStateChanged
+
+    private void jComboBoxStatusItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxStatusItemStateChanged
+        pesquisar();
+    }//GEN-LAST:event_jComboBoxStatusItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -368,7 +457,10 @@ public class MedicoView extends BaseFormulario {
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnSalvar;
+    private javax.swing.JComboBox cbMedico;
     private javax.swing.JComboBox jComboBoxEspecializacao;
+    private javax.swing.JComboBox jComboBoxMesSelecionado;
+    private javax.swing.JComboBox jComboBoxStatus;
     private com.toedter.calendar.JDateChooser jDateChooserDataAdmissao;
     private javax.swing.JFormattedTextField jFormattedTextFieldTelefone;
     private javax.swing.JLabel jLabel1;
@@ -381,7 +473,9 @@ public class MedicoView extends BaseFormulario {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTableAgendamento;
     private javax.swing.JTable jTableMedico;
     private javax.swing.JTextField jTextFieldCRM;
     private javax.swing.JTextField jTextFieldCodigo;
@@ -419,22 +513,29 @@ public class MedicoView extends BaseFormulario {
             throw new Exception("A data de admissão é obrigatória!");
         }
     }
-    
-    public void limparTela(){
-        for(Component c: jPanel1.getComponents()){
-            if(c instanceof JTextField){
-                ((JTextField)c).setText("");
-            }
-            else if(c instanceof JFormattedTextField){
-                ((JFormattedTextField)c).setText("");
-            }
-            else if(c instanceof JDateChooser){
+
+    public void limparTela() {
+        for (Component c : jPanel1.getComponents()) {
+            if (c instanceof JTextField) {
+                ((JTextField) c).setText("");
+            } else if (c instanceof JFormattedTextField) {
+                ((JFormattedTextField) c).setText("");
+            } else if (c instanceof JDateChooser) {
                 try {
-                    ((JDateChooser)c).setDate(DataConverte.getDate(LocalDate.now()));
+                    ((JDateChooser) c).setDate(DataConverte.getDate(LocalDate.now()));
                 } catch (ParseException ex) {
                     System.err.println("data inválida!");
                 }
             }
         }
+        agendamentoTableMoldelMedico.setLista(new ArrayList<>());
+    }
+
+    private void pesquisar() {
+        Medico medicoPesquisado = (Medico) cbMedico.getSelectedItem();
+        MesEnum mes = (MesEnum) jComboBoxMesSelecionado.getSelectedItem();
+        agendamentoTableMoldelMedico.setLista(
+                AGE_DAO.buscarAgendamentoMedicoPaciente(medicoPesquisado.getId(), mes.getValor(),
+                        (StatusAgendamento) jComboBoxStatus.getSelectedItem()));
     }
 }

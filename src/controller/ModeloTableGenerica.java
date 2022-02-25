@@ -1,10 +1,12 @@
 package controller;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import modelo.Base;
 
 public  abstract class ModeloTableGenerica<T extends Base> extends AbstractTableModel{
+    protected final DateTimeFormatter FORMATER_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     protected List<T> lista;
     protected String[] colunas;
     protected T entidade;

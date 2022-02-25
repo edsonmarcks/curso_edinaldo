@@ -12,13 +12,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Agendamento;
+import modelo.utils.StatusAgendamento;
 
 /**
  *
  * @author edsonmarcks
  */
-public class AgendamentoDao implements Operacao<Agendamento>{
-        private PreparedStatement ps;
+public class AgendamentoDao implements Operacao<Agendamento> {
+
+    private PreparedStatement ps;
     private ResultSet rs;
     private String sql;
 
@@ -198,7 +200,38 @@ public class AgendamentoDao implements Operacao<Agendamento>{
         return agendamentos;
     }
 
-    public List<Agendamento> buscarAgendamentoMedicoPaciente(Integer medicoID,Integer pacienteID) {
+    public List<Agendamento> buscarAgendamentoMedicoPaciente(Integer medicoId,Integer mes,StatusAgendamento status) {
+        List<Agendamento> agendamentos = new ArrayList<>();
+        try {
+            sql = "SELECT agendamento.age_id, agendamento.age_data,agendamento.age_hora,agendamento.age_status,"
+                    + "paciente.pac_nome, paciente.pac_nasc from agendamento INNER JOIN paciente on paciente.pac_id = agendamento.age_paciente_id "
+                    + "Where agendamento.age_medico_id=? AND MONTH(agendamento.age_data) = ? AND agendamento.age_status=?";
+            ps = ConexaoDB.getConexao().prepareStatement(sql);
+            ps.setInt(1, medicoId);
+            ps.setInt(2, mes);
+            ps.setString(3, status.name());
+            rs = ps.executeQuery();
+            Agendamento agendamento = null;
+            while (rs.next()) {
+                agendamento = new Agendamento();
+                agendamento.setId(rs.getInt(1));
+                agendamento.setDataLancamento(rs.getDate(2).toLocalDate());
+                agendamento.setHora(rs.getString(3));
+                agendamento.setStatus(rs.getString(4));
+                agendamento.getPaciente().setNome(rs.getString(5));
+                agendamento.getPaciente().setNascimento(rs.getDate(6).toLocalDate());
+                agendamentos.add(agendamento);
+                agendamento = null;
+            }
+            rs.close();
+            ps.closeOnCompletion();
+        } catch (SQLException e) {
+            System.err.println("Desculpe erro ao buscar\n" + e.getMessage());
+        }
+        return agendamentos;
+    }
+
+    public List<Agendamento> buscarAgendamentoMedicoPaciente(Integer medicoID, Integer pacienteID) {
         List<Agendamento> agendamentos = new ArrayList<>();
         try {
             sql = "SELECT * FROM agendamento Where age_medico_id=? and age_paciente_id=?";
