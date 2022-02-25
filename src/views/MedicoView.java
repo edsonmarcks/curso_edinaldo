@@ -6,12 +6,19 @@
 package views;
 
 import com.sun.javafx.scene.layout.region.Margins;
+import com.toedter.calendar.JDateChooser;
 import controller.MedicoTableModel;
+import java.awt.Component;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import static jdk.nashorn.internal.objects.NativeError.printStackTrace;
 import modelo.Medico;
 import modelo.dao.MedicoDao;
 import views.utils.BaseFormulario;
@@ -125,6 +132,11 @@ public class MedicoView extends BaseFormulario {
         });
 
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -270,6 +282,7 @@ public class MedicoView extends BaseFormulario {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         habilitar(false);
+        limparTela();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
@@ -285,6 +298,7 @@ public class MedicoView extends BaseFormulario {
                 medico.setEspecializacao(jComboBoxEspecializacao.getSelectedItem().toString());
                 medico.setTelefone(jFormattedTextFieldTelefone.getText());
                 medico.setDataAdmissao(DataConverte.getLocalDate(jDateChooserDataAdmissao.getDate()));
+                System.out.println(medico.getDataAdmissao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 String mensagem="";
                 if (medico.getId() != null) {
 
@@ -302,8 +316,11 @@ public class MedicoView extends BaseFormulario {
                 medicoTableModel.adicionar(medico);
                 medico = null;
                 habilitar(false);
+                limparTela();
             }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "Desculpe houve uma falha\n"+e.getMessage(),
+                    title, JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
@@ -326,8 +343,24 @@ public class MedicoView extends BaseFormulario {
                 return;
             }
             habilitar(true); //habilita os campos para edição
+            
         }
     }//GEN-LAST:event_jTableMedicoMouseClicked
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        //Exigir confirmação do usuário
+        int op = JOptionPane.showConfirmDialog(rootPane, "Deseja realmente excluir o registro selecionado\n"
+                + medico.getNome().toUpperCase()+" ?",
+                title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(medicoDao.remover(medico)){
+            JOptionPane.showMessageDialog(rootPane, "Registro excluido com sucesso!",
+                    title,JOptionPane.INFORMATION_MESSAGE);
+            medicoTableModel.remover(medico);
+            medico=null;
+            habilitar(false);
+            limparTela();
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -384,6 +417,24 @@ public class MedicoView extends BaseFormulario {
         }
         if (jDateChooserDataAdmissao.getDate() == null) {
             throw new Exception("A data de admissão é obrigatória!");
+        }
+    }
+    
+    public void limparTela(){
+        for(Component c: jPanel1.getComponents()){
+            if(c instanceof JTextField){
+                ((JTextField)c).setText("");
+            }
+            else if(c instanceof JFormattedTextField){
+                ((JFormattedTextField)c).setText("");
+            }
+            else if(c instanceof JDateChooser){
+                try {
+                    ((JDateChooser)c).setDate(DataConverte.getDate(LocalDate.now()));
+                } catch (ParseException ex) {
+                    System.err.println("data inválida!");
+                }
+            }
         }
     }
 }
