@@ -332,7 +332,7 @@ public class MedicoView extends BaseFormulario{
             throw new Exception("Informe o telefone");
         }
         if(jDateChooserDataAdmissao.getDate()==null){
-            
+            throw new Exception("A data de admissão é obrigatória!");
         }
     }
 }
