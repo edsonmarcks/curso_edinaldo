@@ -5,28 +5,35 @@
  */
 package views;
 
+import com.sun.javafx.scene.layout.region.Margins;
 import controller.MedicoTableModel;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.Medico;
 import modelo.dao.MedicoDao;
 import views.utils.BaseFormulario;
+import views.utils.DataConverte;
 
 /**
  *
  * @author edsonmarcks
  */
-public class MedicoView extends BaseFormulario{
+public class MedicoView extends BaseFormulario {
+
     private MedicoTableModel medicoTableModel;
     private MedicoDao medicoDao;
     private Medico medico;
+
     /**
      * Creates new form MedicoView
      */
     public MedicoView() {
         initComponents();
-        medicoDao=new MedicoDao(); //cria o objeto de persistencia
-        medicoTableModel=new MedicoTableModel(new ArrayList<>()); //cria o modelo para a tabela
+        medicoDao = new MedicoDao(); //cria o objeto de persistencia
+        medicoTableModel = new MedicoTableModel(medicoDao.buscarTodos()); //cria o modelo para a tabela
         jTableMedico.setModel(medicoTableModel); //seta o modelo na tabela
         habilitar(false); //inicia o formulário com os campo bloqueados
     }
@@ -96,6 +103,11 @@ public class MedicoView extends BaseFormulario{
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTableMedico.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableMedicoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableMedico);
 
         btnNovo.setText("Novo");
@@ -253,7 +265,7 @@ public class MedicoView extends BaseFormulario{
         // TODO add your handling code here:
         habilitar(true); //desbloqueia os campos do formulário
         jTextFieldNome.requestFocus(); //foca no campo nome do médico
-        medico=new Medico(); //cria novo medico
+        medico = new Medico(); //cria novo medico
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -266,16 +278,56 @@ public class MedicoView extends BaseFormulario{
             validarCamposFormulario();
             //Confirmação do usuário
             int op = JOptionPane.showConfirmDialog(rootPane, "Confirmar a operação?",
-                    "Salvando registro", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-            if(op==JOptionPane.YES_OPTION){
+                    "Salvando registro", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (op == JOptionPane.YES_OPTION) {
                 medico.setNome(jTextFieldNome.getText());
                 medico.setCRM(jTextFieldCRM.getText());
                 medico.setEspecializacao(jComboBoxEspecializacao.getSelectedItem().toString());
                 medico.setTelefone(jFormattedTextFieldTelefone.getText());
+                medico.setDataAdmissao(DataConverte.getLocalDate(jDateChooserDataAdmissao.getDate()));
+                String mensagem="";
+                if (medico.getId() != null) {
+
+                    if (medicoDao.atualizar(medico)) {
+                        mensagem="Registro atualizado com sucesso!";
+                    }
+
+                } else {
+                    if (medicoDao.salvar(medico)) {
+                        mensagem="Novo registro salvo com sucesso!";
+                    }
+                }
+                JOptionPane.showMessageDialog(rootPane, mensagem,"Cadastro de médico", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                medicoTableModel.adicionar(medico);
+                medico = null;
+                habilitar(false);
             }
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void jTableMedicoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMedicoMouseClicked
+        //pegar o dado linha selecionada
+        medico = medicoTableModel.getEntity(jTableMedico.getSelectedRow());
+        //verificar se o registro entrado é válido ou não está nulo.
+        if (medico != null && medico.getId() != null) //garanto que é registro vindo do banco pelo id
+        {
+            //capturo os dados na tela para o usuário
+            jTextFieldCodigo.setText(String.format("%05d", medico.getId()));
+            jTextFieldCRM.setText(medico.getCRM());
+            jTextFieldNome.setText(medico.getNome());
+            jComboBoxEspecializacao.setSelectedItem(medico.getEspecializacao());
+            jFormattedTextFieldTelefone.setText(medico.getTelefone());
+            try {
+                jDateChooserDataAdmissao.setDate(DataConverte.getDate(medico.getDataAdmissao()));
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(rootPane, "Data Informada é inválida", "Desculpe", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            habilitar(true); //habilita os campos para edição
+        }
+    }//GEN-LAST:event_jTableMedicoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -303,9 +355,8 @@ public class MedicoView extends BaseFormulario{
     private javax.swing.JTextField jTextFieldNome;
     // End of variables declaration//GEN-END:variables
 
-
     //Bloqueia ou desbloqueia os campos do formulário
-    public void habilitar(boolean  b){
+    public void habilitar(boolean b) {
         jTextFieldNome.setEnabled(b);
         jTextFieldCRM.setEnabled(b);
         jDateChooserDataAdmissao.setEnabled(b);
@@ -316,22 +367,22 @@ public class MedicoView extends BaseFormulario{
         btnExcluir.setEnabled(b);
         btnCancelar.setEnabled(b);
     }
-    
+
     //Verifica se o usuário preencheu corretamente os campos obrigatórios
-    public void validarCamposFormulario() throws Exception{
-        
-        if(jTextFieldNome.getText()==null || jTextFieldNome.getText().trim().equals("")
-                || jTextFieldNome.getText().trim().isEmpty()){
+    public void validarCamposFormulario() throws Exception {
+
+        if (jTextFieldNome.getText() == null || jTextFieldNome.getText().trim().equals("")
+                || jTextFieldNome.getText().trim().isEmpty()) {
             throw new Exception("O Campo nome é obrigatório!");
         }
-        if(jTextFieldCRM.getText()==null || jTextFieldCRM.getText().trim().equals("")
-                || jTextFieldCRM.getText().trim().isEmpty()){
+        if (jTextFieldCRM.getText() == null || jTextFieldCRM.getText().trim().equals("")
+                || jTextFieldCRM.getText().trim().isEmpty()) {
             throw new Exception("O CRM é obrigatório!");
         }
-        if(jFormattedTextFieldTelefone.getText().equals("(  )     -    ")){
+        if (jFormattedTextFieldTelefone.getText().equals("(  )     -    ")) {
             throw new Exception("Informe o telefone");
         }
-        if(jDateChooserDataAdmissao.getDate()==null){
+        if (jDateChooserDataAdmissao.getDate() == null) {
             throw new Exception("A data de admissão é obrigatória!");
         }
     }

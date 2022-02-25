@@ -54,7 +54,7 @@ public class MedicoDao implements Operacao<Medico> {
                     + "med_data_admissao=?,"
                     + "med_especializacao=?,"
                     + "med_telefone=?,"
-                    + "med_CRM=?,"
+                    + "med_CRM=?"
                     + " WHERE med_id=?";
             ps = ConexaoDB.getConexao().prepareStatement(sql);
             ps.setString(1, t.getNome());

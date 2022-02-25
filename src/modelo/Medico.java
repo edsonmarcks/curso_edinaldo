@@ -59,11 +59,12 @@ public class Medico  implements Base{
     }
 
     public String getTelefone() {
-        return telefone;
+        return telefone.replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("-", "");
     }
 
     public void setTelefone(String telefone) {
-        this.telefone = telefone;
+        //remove a máscara do telefone
+        this.telefone = telefone.replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("-", "");
     }
 
     public String getCRM() {
