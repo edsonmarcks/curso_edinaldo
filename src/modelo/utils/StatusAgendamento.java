@@ -10,9 +10,8 @@ package modelo.utils;
  * @author edsonmarcks
  */
 public enum StatusAgendamento {
-    ABERTO("Aberto"),
+    AGENDADO("Agendado"),
     CANCELADO("Cancelado"),
-    CONFIRMADO("Confirmado"),
     FINALIZADO("Finalizado");
     
     private final String value;

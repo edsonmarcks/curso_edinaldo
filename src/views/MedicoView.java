@@ -91,9 +91,12 @@ public class MedicoView extends BaseFormulario {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableAgendamento = new javax.swing.JTable();
+        lbMedico = new javax.swing.JLabel();
         cbMedico = new javax.swing.JComboBox();
-        jComboBoxStatus = new javax.swing.JComboBox();
+        lbMesSelecionado = new javax.swing.JLabel();
         jComboBoxMesSelecionado = new javax.swing.JComboBox();
+        lbStatus = new javax.swing.JLabel();
+        jComboBoxStatus = new javax.swing.JComboBox();
         jPanel3 = new javax.swing.JPanel();
 
         jLabel1.setText("Código");
@@ -236,7 +239,7 @@ public class MedicoView extends BaseFormulario {
                     .addComponent(jComboBoxEspecializacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jFormattedTextFieldTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNovo)
@@ -263,6 +266,8 @@ public class MedicoView extends BaseFormulario {
         ));
         jScrollPane2.setViewportView(jTableAgendamento);
 
+        lbMedico.setText("Selecione o médico");
+
         cbMedico.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbMedico.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -270,17 +275,21 @@ public class MedicoView extends BaseFormulario {
             }
         });
 
-        jComboBoxStatus.setModel(new javax.swing.DefaultComboBoxModel(StatusAgendamento.values()));
-        jComboBoxStatus.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBoxStatusItemStateChanged(evt);
-            }
-        });
+        lbMesSelecionado.setText("Mês");
 
         jComboBoxMesSelecionado.setModel(new javax.swing.DefaultComboBoxModel(MesEnum.values()));
         jComboBoxMesSelecionado.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBoxMesSelecionadoItemStateChanged(evt);
+            }
+        });
+
+        lbStatus.setText("Status");
+
+        jComboBoxStatus.setModel(new javax.swing.DefaultComboBoxModel(StatusAgendamento.values()));
+        jComboBoxStatus.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxStatusItemStateChanged(evt);
             }
         });
 
@@ -291,19 +300,31 @@ public class MedicoView extends BaseFormulario {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(cbMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbMedico))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBoxMesSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBoxMesSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbMesSelecionado))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBoxStatus, 0, 180, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(lbStatus)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jComboBoxStatus, 0, 168, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbMedico)
+                    .addComponent(lbMesSelecionado)
+                    .addComponent(lbStatus))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cbMedico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -326,7 +347,7 @@ public class MedicoView extends BaseFormulario {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 549, Short.MAX_VALUE)
+            .addGap(0, 550, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Consultas", jPanel3);
@@ -480,6 +501,9 @@ public class MedicoView extends BaseFormulario {
     private javax.swing.JTextField jTextFieldCRM;
     private javax.swing.JTextField jTextFieldCodigo;
     private javax.swing.JTextField jTextFieldNome;
+    private javax.swing.JLabel lbMedico;
+    private javax.swing.JLabel lbMesSelecionado;
+    private javax.swing.JLabel lbStatus;
     // End of variables declaration//GEN-END:variables
 
     //Bloqueia ou desbloqueia os campos do formulário
@@ -534,6 +558,7 @@ public class MedicoView extends BaseFormulario {
     private void pesquisar() {
         Medico medicoPesquisado = (Medico) cbMedico.getSelectedItem();
         MesEnum mes = (MesEnum) jComboBoxMesSelecionado.getSelectedItem();
+        System.out.println(mes);
         agendamentoTableMoldelMedico.setLista(
                 AGE_DAO.buscarAgendamentoMedicoPaciente(medicoPesquisado.getId(), mes.getValor(),
                         (StatusAgendamento) jComboBoxStatus.getSelectedItem()));
