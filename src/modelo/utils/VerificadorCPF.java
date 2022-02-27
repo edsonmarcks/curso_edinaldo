@@ -1,7 +1,5 @@
 package modelo.utils;
 
-import com.sun.javafx.image.impl.IntArgb;
-
 public class VerificadorCPF {
 
     private static String cpfInformado;

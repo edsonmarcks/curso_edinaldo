@@ -5,7 +5,6 @@
  */
 package views;
 
-import com.sun.javafx.scene.layout.region.Margins;
 import com.toedter.calendar.JDateChooser;
 import controller.AgendamentoTableMoldelMedico;
 import controller.MedicoComboBox;
@@ -15,12 +14,9 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import static jdk.nashorn.internal.objects.NativeError.printStackTrace;
 import modelo.Agendamento;
 import modelo.Medico;
 import modelo.dao.AgendamentoDao;
