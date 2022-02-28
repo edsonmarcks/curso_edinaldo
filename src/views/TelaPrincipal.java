@@ -15,6 +15,7 @@ import javax.swing.UIManager;
 public class TelaPrincipal extends javax.swing.JFrame {
     private UsuarioView usuarioView;
     private MedicoView medicoView;
+    private AgendamentoView agendamentoView;
     /**
      * Creates new form TelaPrincipal
      */
@@ -39,7 +40,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItemAgendamento = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -80,8 +81,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jMenu2.setText("Serviços");
 
-        jMenuItem3.setText("Agendamento");
-        jMenu2.add(jMenuItem3);
+        jMenuItemAgendamento.setText("Agendamento");
+        jMenuItemAgendamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemAgendamentoActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItemAgendamento);
 
         jMenuItem4.setText("Consulta");
         jMenu2.add(jMenuItem4);
@@ -131,6 +137,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
         medicoView.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void jMenuItemAgendamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAgendamentoActionPerformed
+        //caso o tela de agendamento ainda não tenha sido instaciada uma nova tela é criada
+        if(agendamentoView==null || agendamentoView.isClosed()){
+            agendamentoView=new AgendamentoView();
+            jDesktopPane1.add(agendamentoView); //adiciona a tela de agendamento dentro do contexto
+        }
+        //centraliza
+        agendamentoView.centralizar();
+        //mostra a tela
+        agendamentoView.setVisible(true);
+    }//GEN-LAST:event_jMenuItemAgendamentoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -175,8 +193,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItemAgendamento;
     // End of variables declaration//GEN-END:variables
 }

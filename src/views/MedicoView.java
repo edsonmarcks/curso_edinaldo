@@ -103,6 +103,8 @@ public class MedicoView extends BaseFormulario {
 
         jLabel3.setText("Dt. Admissão*");
 
+        jDateChooserDataAdmissao.setDateFormatString("dd/MM/yyyy");
+
         jLabel4.setText("CRM*");
 
         jLabel5.setText("Especialização*");
