@@ -1,5 +1,6 @@
 package views;
 
+import java.time.format.DateTimeFormatter;
 import modelo.Medico;
 import modelo.Paciente;
 import views.helper.MedicoPesquisaJDialog;
@@ -29,14 +30,24 @@ public class AgendamentoView extends BaseFormulario {
 
         lbSelecioneProfissional = new javax.swing.JLabel();
         txtNomeMedico = new javax.swing.JTextField();
-        lbPacienteName = new javax.swing.JLabel();
-        txtNomePaciente = new javax.swing.JTextField();
         btnBuscarMedico = new javax.swing.JButton();
-        btnBuscarPaciente = new javax.swing.JButton();
-        lbHorarios = new javax.swing.JLabel();
+        lbEspecialidade = new javax.swing.JLabel();
         lbTituloCRM = new javax.swing.JLabel();
         lbCRM = new javax.swing.JLabel();
-        lbEspecialidade = new javax.swing.JLabel();
+        lbPacienteName = new javax.swing.JLabel();
+        txtNomePaciente = new javax.swing.JTextField();
+        btnBuscarPaciente = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        lbDataNascimento = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        lbCPF = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jLabel4 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setTitle("Agendamento de Consultas");
 
@@ -45,17 +56,23 @@ public class AgendamentoView extends BaseFormulario {
 
         txtNomeMedico.setEditable(false);
 
-        lbPacienteName.setFont(new java.awt.Font("Liberation Sans", 1, 13)); // NOI18N
-        lbPacienteName.setText("Paciente*");
-
-        txtNomePaciente.setEditable(false);
-
         btnBuscarMedico.setText("...");
         btnBuscarMedico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarMedicoActionPerformed(evt);
             }
         });
+
+        lbEspecialidade.setText(":::");
+
+        lbTituloCRM.setText("CRM:");
+
+        lbCRM.setText("::::");
+
+        lbPacienteName.setFont(new java.awt.Font("Liberation Sans", 1, 13)); // NOI18N
+        lbPacienteName.setText("Paciente*");
+
+        txtNomePaciente.setEditable(false);
 
         btnBuscarPaciente.setText("...");
         btnBuscarPaciente.addActionListener(new java.awt.event.ActionListener() {
@@ -64,13 +81,29 @@ public class AgendamentoView extends BaseFormulario {
             }
         });
 
-        lbHorarios.setText("Horários disponíveis");
+        jLabel1.setText("Nasc:");
 
-        lbTituloCRM.setText("CRM:");
+        lbDataNascimento.setText("::");
 
-        lbCRM.setText("::::");
+        jLabel2.setText("CPF:");
 
-        lbEspecialidade.setText(":::");
+        lbCPF.setText("::");
+
+        jLabel3.setText("Data do agendamento");
+
+        jLabel4.setText("Selecione o horario");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jButton1.setBackground(new java.awt.Color(0, 105, 217));
+        jButton1.setFont(new java.awt.Font("Liberation Sans", 1, 13)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Confirmar");
+
+        jButton2.setBackground(new java.awt.Color(200, 35, 51));
+        jButton2.setFont(new java.awt.Font("Liberation Sans", 1, 13)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Cancelar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,23 +112,50 @@ public class AgendamentoView extends BaseFormulario {
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbTituloCRM)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbCRM)
-                        .addGap(138, 138, 138)
-                        .addComponent(lbEspecialidade, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbSelecioneProfissional)
-                            .addComponent(lbPacienteName)
-                            .addComponent(txtNomePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbHorarios)
-                            .addComponent(txtNomeMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnBuscarMedico)
-                            .addComponent(btnBuscarPaciente))))
+                    .addComponent(jSeparator1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(lbTituloCRM)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lbCRM)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbEspecialidade, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbSelecioneProfissional)
+                                    .addComponent(lbPacienteName)
+                                    .addComponent(txtNomePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNomeMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(jLabel3)
+                                            .addGap(46, 46, 46))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(jLabel1)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(lbDataNascimento))
+                                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGap(41, 41, 41)))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel2)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(lbCPF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnBuscarMedico)
+                                .addComponent(btnBuscarPaciente)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -119,8 +179,26 @@ public class AgendamentoView extends BaseFormulario {
                     .addComponent(txtNomePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarPaciente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbHorarios)
-                .addContainerGap(295, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lbDataNascimento)
+                    .addComponent(jLabel2)
+                    .addComponent(lbCPF))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -145,6 +223,10 @@ public class AgendamentoView extends BaseFormulario {
         pacienteSelecionado = pacientePesquisaJDialog.getPacienteSelecionado();
         if(pacienteSelecionado != null && pacienteSelecionado.getId() != null){
             txtNomePaciente.setText(pacienteSelecionado.getNome().toUpperCase());
+            lbDataNascimento.setText( //Pega a data de nascimento em formato de texto
+                    pacienteSelecionado.getNascimento()
+                            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            lbCPF.setText(pacienteSelecionado.getCPF());
         }else{
             
         }        
@@ -154,9 +236,19 @@ public class AgendamentoView extends BaseFormulario {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarMedico;
     private javax.swing.JButton btnBuscarPaciente;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lbCPF;
     private javax.swing.JLabel lbCRM;
+    private javax.swing.JLabel lbDataNascimento;
     private javax.swing.JLabel lbEspecialidade;
-    private javax.swing.JLabel lbHorarios;
     private javax.swing.JLabel lbPacienteName;
     private javax.swing.JLabel lbSelecioneProfissional;
     private javax.swing.JLabel lbTituloCRM;
@@ -164,9 +256,13 @@ public class AgendamentoView extends BaseFormulario {
     private javax.swing.JTextField txtNomePaciente;
     // End of variables declaration//GEN-END:variables
 
+    //Limpa os campos
     private void limpar() {
         lbCRM.setText(":::");
         lbEspecialidade.setText(":::");
         txtNomeMedico.setText(null);
+        lbCPF.setText(":::");
+        lbDataNascimento.setText(":::");
+        txtNomePaciente.setText(null);
     }
 }

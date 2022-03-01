@@ -30,7 +30,7 @@ import views.utils.DataConverte;
  *
  * @author edsonmarcks
  */
-public class MedicoView extends BaseFormulario {
+public final class MedicoView extends BaseFormulario {
 
     private final MedicoComboBox modelComboBox;
     private final AgendamentoDao AGE_DAO = new AgendamentoDao();
@@ -42,13 +42,14 @@ public class MedicoView extends BaseFormulario {
     /**
      * Creates new form MedicoView
      */
+    @SuppressWarnings("unchecked")
     public MedicoView() {
         initComponents();
         medicoDao = new MedicoDao(); //cria o objeto de persistencia
         modelComboBox = new MedicoComboBox(medicoDao.buscarTodos());
 
         medicoTableModel = new MedicoTableModel(medicoDao.buscarTodos()); //cria o modelo para a tabela
-        agendamentoTableMoldelMedico = new AgendamentoTableMoldelMedico(new ArrayList<Agendamento>());
+        agendamentoTableMoldelMedico = new AgendamentoTableMoldelMedico(new ArrayList<>());
         jTableMedico.setModel(medicoTableModel); //seta o modelo na tabela
         jTableAgendamento.setModel(agendamentoTableMoldelMedico);
         cbMedico.setModel(modelComboBox);

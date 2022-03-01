@@ -64,8 +64,8 @@ public class Paciente implements Base{
      * @throws RuntimeException 
      */
     public void setCPF(String CPF) throws RuntimeException{
-        if(!VerificadorCPF.validandoCPF(CPF))
-            throw  new RuntimeException("CPF Informado é Inválido!!!");
+//        if(!VerificadorCPF.validandoCPF(CPF))
+//            throw  new RuntimeException("CPF Informado é Inválido!!!");
         this.CPF = CPF.replaceAll("-", "").replaceAll("\\.", "");
     }
 
