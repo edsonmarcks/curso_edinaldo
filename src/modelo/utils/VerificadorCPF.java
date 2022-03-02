@@ -15,6 +15,9 @@ public class VerificadorCPF {
      */
     public static boolean validandoCPF(String cpfInfo) {
         cpfInformado = cpfInfo.replaceAll("-", "").replaceAll("\\.", "");
+        if(cpfInformado.trim().isEmpty() ){
+            return false;
+        }
         System.out.println("cpf: " + cpfInfo);
         System.out.println("cpf sem pontos: " + cpfInformado);
         int[] verificador1 = {10, 9, 8, 7, 6, 5, 4, 3, 2};
@@ -53,6 +56,6 @@ public class VerificadorCPF {
         //adicionado ao cpf validado
         cpfValidado.append(aux);
         
-        return cpfInformado.equals(cpfValidado.toString());
+        return cpfInformado.equals(String.valueOf(cpfValidado));
     }
 }

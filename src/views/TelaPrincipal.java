@@ -13,9 +13,12 @@ import javax.swing.UIManager;
  * @author edsonmarcks
  */
 public class TelaPrincipal extends javax.swing.JFrame {
+
     private UsuarioView usuarioView;
     private MedicoView medicoView;
     private AgendamentoView agendamentoView;
+    private PacienteView pacienteView;
+
     /**
      * Creates new form TelaPrincipal
      */
@@ -38,7 +41,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItemPaciente = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItemAgendamento = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -69,13 +72,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem2.setText("Paciente");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemPaciente.setText("Paciente");
+        jMenuItemPaciente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                jMenuItemPacienteActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        jMenu1.add(jMenuItemPaciente);
 
         jMenuBar1.add(jMenu1);
 
@@ -116,21 +119,26 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu1ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        if(usuarioView == null || usuarioView.isClosed()){
-            usuarioView= new UsuarioView();
+        if (usuarioView == null || usuarioView.isClosed()) {
+            usuarioView = new UsuarioView();
             jDesktopPane1.add(usuarioView);
         }
         usuarioView.centralizar();
         usuarioView.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-      
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    private void jMenuItemPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPacienteActionPerformed
+        if (pacienteView == null || pacienteView.isClosed()) {
+            pacienteView = new PacienteView();
+            jDesktopPane1.add(pacienteView);
+        }
+        pacienteView.centralizar();
+        pacienteView.setVisible(true);
+    }//GEN-LAST:event_jMenuItemPacienteActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        if(medicoView == null || medicoView.isClosed()){
-            medicoView= new MedicoView();
+        if (medicoView == null || medicoView.isClosed()) {
+            medicoView = new MedicoView();
             jDesktopPane1.add(medicoView);
         }
         medicoView.centralizar();
@@ -139,8 +147,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jMenuItemAgendamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAgendamentoActionPerformed
         //caso o tela de agendamento ainda não tenha sido instaciada uma nova tela é criada
-        if(agendamentoView==null || agendamentoView.isClosed()){
-            agendamentoView=new AgendamentoView();
+        if (agendamentoView == null || agendamentoView.isClosed()) {
+            agendamentoView = new AgendamentoView();
             jDesktopPane1.add(agendamentoView); //adiciona a tela de agendamento dentro do contexto
         }
         //centraliza
@@ -159,7 +167,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            
+
             UIManager.setLookAndFeel(new FlatLightLaf());
 //            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 //                if ("FlatLightLaf".equals(info.getName())) {
@@ -192,9 +200,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItemAgendamento;
+    private javax.swing.JMenuItem jMenuItemPaciente;
     // End of variables declaration//GEN-END:variables
 }

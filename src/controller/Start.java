@@ -8,6 +8,7 @@ import modelo.Medico;
 import modelo.Usuario;
 import modelo.dao.MedicoDao;
 import modelo.dao.UsuarioDao;
+import modelo.utils.VerificadorCPF;
 
 /**
  *
@@ -15,17 +16,10 @@ import modelo.dao.UsuarioDao;
  */
 public class Start {
     public static void main(String[] args) {
-        Medico medico= new Medico();
-        try {
-            UsuarioDao dao = new UsuarioDao();
-            for(Usuario u : dao.buscarTodos()){
-                System.out.println("Nome: "+u.getNome());
-                System.out.println("Permissão: "+u.getPermissaoUsuario());
-                System.out.println("Apenas Test");
-            }
-            
-        } catch (RuntimeException ex) {
-            Logger.getLogger(Start.class.getName()).log(Level.SEVERE, null, ex);
+        if(VerificadorCPF.validandoCPF("658.700.260-91")){
+            System.out.println("Valido");
+        }else{
+            System.out.println("Inválido");
         }
     }
 }

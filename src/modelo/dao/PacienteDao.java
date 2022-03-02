@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Paciente;
@@ -33,7 +34,7 @@ public class PacienteDao implements Operacao<Paciente> {
                     + "pac_cidade,"
                     + "pac_estado)"
                     + " VALUES (?,?,?,?,?,?,?,?,?,?)";
-            ps = ConexaoDB.getConexao().prepareStatement(sql);
+            ps = ConexaoDB.getConexao().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, t.getNome());
             ps.setString(2, t.getSexo());
             ps.setDate(3, Date.valueOf(t.getNascimento()));
@@ -45,6 +46,11 @@ public class PacienteDao implements Operacao<Paciente> {
             ps.setString(9, t.getCidade());
             ps.setString(10, t.getEstado());
             ps.execute();
+            rs = ps.getGeneratedKeys();
+            if(rs.next()){
+                t.setId(rs.getInt(1));
+            }
+            rs.close();
             ps.closeOnCompletion();
             System.out.println("Novo paciente cadastrado com sucesso!");
             return true;
