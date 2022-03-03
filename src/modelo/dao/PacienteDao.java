@@ -108,7 +108,9 @@ public class PacienteDao implements Operacao<Paciente> {
             System.out.println("Paciente removido com sucesso!");
             return true;
         } catch (SQLException ex) {
-            System.err.println("O registro não foi removido, motivo: \n" + ex.getMessage());
+            TransportMessage.MESSAGE="O registro não pode ser removido\n"+ex.getMessage();
+            TransportMessage.COD_ERROR = ex.getErrorCode();
+            System.err.println("O registro não foi removido, motivo: \n" + ex.getMessage()+" \nCODE: "+ex.getErrorCode()) ;
         }
         return false;
     }
@@ -138,6 +140,7 @@ public class PacienteDao implements Operacao<Paciente> {
             rs.close();
             ps.closeOnCompletion();
         } catch (SQLException | RuntimeException e) {
+           
             System.err.println("Falha ao localizar o paciente por [id] \n" + e.getMessage());
         }
         return paciente;

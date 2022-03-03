@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.Paciente;
 import modelo.dao.PacienteDao;
+import modelo.dao.TransportMessage;
 import modelo.utils.VerificadorCPF;
 import views.utils.BaseFormulario;
 import views.utils.DataConverte;
@@ -193,6 +194,7 @@ public class PacienteView extends BaseFormulario {
         );
 
         btnNovo.setFont(new java.awt.Font("Liberation Sans", 1, 13)); // NOI18N
+        btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/icons/Document-Blank-icon.png"))); // NOI18N
         btnNovo.setText("Novo");
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,6 +203,7 @@ public class PacienteView extends BaseFormulario {
         });
 
         btnSalvar.setFont(new java.awt.Font("Liberation Sans", 1, 13)); // NOI18N
+        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/icons/Actions-document-save-icon.png"))); // NOI18N
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,9 +212,16 @@ public class PacienteView extends BaseFormulario {
         });
 
         btnExcluir.setFont(new java.awt.Font("Liberation Sans", 1, 13)); // NOI18N
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/icons/Actions-application-exit-icon.png"))); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setFont(new java.awt.Font("Liberation Sans", 1, 13)); // NOI18N
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/icons/Action-delete-icon.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -383,7 +393,7 @@ public class PacienteView extends BaseFormulario {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtPesquisarCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtPesquisarCaretUpdate
-        if (txtPesquisar.getText().trim().length() > 2) {
+        if (txtPesquisar.getText().trim().length() > 0) {
             pacienteTableModel.setLista(pacienteDao.buscarTodos(txtPesquisar.getText()));
         } else {
             pacienteTableModel.resetLista();
@@ -442,24 +452,24 @@ public class PacienteView extends BaseFormulario {
             paciente.setTelefone(txtTelefone.getText());
             paciente.setSexo(cbSexo.getSelectedItem().toString());
             paciente.setEstado(cbEstado.getSelectedItem().toString());
-            String mensagem="";
+            String mensagem = "";
             if (paciente.getId() != null) {
-                if(!pacienteDao.atualizar(paciente)){
+                if (!pacienteDao.atualizar(paciente)) {
                     throw new Exception("Não atualizou.");
                 }
-                    mensagem="paciente atualizado com sucesso!";
-                
+                mensagem = "paciente atualizado com sucesso!";
+
             } else {
                 if (!pacienteDao.salvar(paciente)) {
                     throw new Exception("Não foi criado o cadastro.");
                 }
-                    mensagem="Novo paciente cadastrado com sucesso";
+                mensagem = "Novo paciente cadastrado com sucesso";
             }
             pacienteTableModel.adicionar(paciente);
             JOptionPane.showMessageDialog(rootPane, mensagem, title, JOptionPane.INFORMATION_MESSAGE);
             habilitar(false);
             limpar();
-            paciente=null;
+            paciente = null;
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane,
@@ -467,6 +477,39 @@ public class PacienteView extends BaseFormulario {
                     title, JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        //Pega o paciente selecionado na tabela;
+        paciente = pacienteTableModel.getEntity(jTablePacientes.getSelectedRow());
+        if (paciente != null && paciente.getId() != null) { //caso não seja nulo
+            int op = JOptionPane.showConfirmDialog(rootPane, //exibe um dialog de confirmação
+                    "Confirma e exclusão do paciente:\n" + paciente.getNome().toUpperCase()+"?",
+                    title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (op == JOptionPane.YES_OPTION) { //caso responda sim
+                //apaga o registro
+                if (pacienteDao.remover(paciente)) {
+                    JOptionPane.showMessageDialog(rootPane, "O paciente: "
+                            + paciente.getNome().toUpperCase() + " foi removido com sucesso!\n",
+                            title, JOptionPane.INFORMATION_MESSAGE);
+                    habilitar(false);
+                    limpar();
+                    
+                    paciente = null;
+                } else {
+                    String msg="Não foi possível remover "+paciente.getNome().toUpperCase();
+                    if(TransportMessage.COD_ERROR == 1451){
+                        msg+="\npois o mesmo possui AGENDAMENTOS/CONSULTAS associado(a)s a ele.";
+                    }
+                    JOptionPane.showMessageDialog(rootPane, msg,
+                            title, JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Por favor selecione um paciente.",
+                    title, JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
