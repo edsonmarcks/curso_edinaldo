@@ -9,8 +9,11 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Agendamento;
 import modelo.utils.StatusAgendamento;
 
@@ -33,7 +36,7 @@ public class AgendamentoDao implements Operacao<Agendamento> {
                     + "age_data,"
                     + "age_hora,"
                     + "age_status)"
-                    + " VALUES (?,?,?,?,?,?,?)";
+                    + " VALUES (?,?,?,?,?)";
             ps = ConexaoDB.getConexao().prepareStatement(sql);
             ps.setInt(1, t.getPaciente().getId());
             ps.setInt(2, t.getMedico().getId());
@@ -200,7 +203,7 @@ public class AgendamentoDao implements Operacao<Agendamento> {
         return agendamentos;
     }
 
-    public List<Agendamento> buscarAgendamentoMedicoPaciente(Integer medicoId,Integer mes,StatusAgendamento status) {
+    public List<Agendamento> buscarAgendamentoMedicoPaciente(Integer medicoId, Integer mes, StatusAgendamento status) {
         List<Agendamento> agendamentos = new ArrayList<>();
         try {
             sql = "SELECT agendamento.age_id, agendamento.age_data,agendamento.age_hora,agendamento.age_status,"
@@ -257,5 +260,29 @@ public class AgendamentoDao implements Operacao<Agendamento> {
             System.err.println("Desculpe erro ao buscar\n" + e.getMessage());
         }
         return agendamentos;
+    }
+
+    public boolean isHorarioVago(Integer idMedico, LocalDate data, String horario) {
+        boolean resultado = false;
+        try {
+            sql = "select age_id from agendamento where age_medico_id=? "
+                    + "and age_data = ? AND age_hora = ?";
+            ps = ConexaoDB.getConexao().prepareStatement(sql);
+            ps.setInt(1, idMedico);
+            ps.setDate(2, Date.valueOf(data));
+            ps.setString(3, horario);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                resultado=false;
+            }else{
+                resultado=true;
+            }
+            rs.close();
+            ps.closeOnCompletion();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AgendamentoDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
     }
 }

@@ -14,10 +14,13 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+--CREATE DATABASE;
 
+create database if not exists db_clinica;
 --
 -- Table structure for table `agendamento`
 --
+use db_clinica;
 
 DROP TABLE IF EXISTS `agendamento`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

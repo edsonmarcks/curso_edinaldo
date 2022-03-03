@@ -3,8 +3,10 @@ package views;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
+import modelo.Agendamento;
 import modelo.Medico;
 import modelo.Paciente;
+import modelo.dao.AgendamentoDao;
 import views.helper.MedicoPesquisaJDialog;
 import views.helper.PacientePesquisaJDialog;
 import views.utils.BaseFormulario;
@@ -16,12 +18,15 @@ public class AgendamentoView extends BaseFormulario {
     private final LocalDate hoje = LocalDate.now();
     private Medico medicoSelecionado;
     private Paciente pacienteSelecionado;
+    private AgendamentoDao agendamentoDao;
+    private Agendamento agendamento;
 
     /**
      * Creates new form AgendamentoView
      */
     public AgendamentoView() {
         initComponents();
+        agendamentoDao = new AgendamentoDao();
     }
 
     /**
@@ -49,7 +54,7 @@ public class AgendamentoView extends BaseFormulario {
         jLabel3 = new javax.swing.JLabel();
         jDateChooserDataAgendamento = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBoxHorarios = new javax.swing.JComboBox<>();
         btnConfirmar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
@@ -104,7 +109,7 @@ public class AgendamentoView extends BaseFormulario {
 
         jLabel4.setText("Selecione o horario");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxHorarios.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "08:00", "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00" }));
 
         btnConfirmar.setBackground(new java.awt.Color(0, 105, 217));
         btnConfirmar.setFont(new java.awt.Font("Liberation Sans", 1, 13)); // NOI18N
@@ -165,7 +170,7 @@ public class AgendamentoView extends BaseFormulario {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(lbCPF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jComboBoxHorarios, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,7 +211,7 @@ public class AgendamentoView extends BaseFormulario {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jDateChooserDataAgendamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBoxHorarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(9, 9, 9)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -277,8 +282,33 @@ public class AgendamentoView extends BaseFormulario {
             JOptionPane.showMessageDialog(rootPane, "Por favor informe uma data válida.",
                     title, JOptionPane.WARNING_MESSAGE);
             return;
+        }
+
+        if (!agendamentoDao.isHorarioVago(medicoSelecionado.getId(), dataAgendamento, jComboBoxHorarios.getSelectedItem().toString())) {
+            JOptionPane.showMessageDialog(rootPane, "Horário não disponível", title, JOptionPane.WARNING_MESSAGE);
+            return;
         }// </editor-fold>  
-        
+        int op = JOptionPane.showConfirmDialog(rootPane, "Confirmar agendamento?",
+                title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (op == JOptionPane.YES_OPTION) {
+            try {
+                agendamento = new Agendamento();
+                agendamento.setDataLancamento(dataAgendamento);
+                agendamento.setHora(jComboBoxHorarios.getSelectedItem().toString());
+                agendamento.setMedico(medicoSelecionado);
+                agendamento.setPaciente(pacienteSelecionado);
+                agendamento.setStatus("AGENDADO");
+                if (agendamentoDao.salvar(agendamento)) {
+                    JOptionPane.showMessageDialog(rootPane, "Novo agendamento realizado com sucesso", title,
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    throw new Exception("Desculpe não foi possível salvar o agendamento.");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(rootPane, e.getMessage(), title,
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
 
@@ -287,7 +317,7 @@ public class AgendamentoView extends BaseFormulario {
     private javax.swing.JButton btnBuscarPaciente;
     private javax.swing.JButton btnConfirmar;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBoxHorarios;
     private com.toedter.calendar.JDateChooser jDateChooserDataAgendamento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -315,5 +345,4 @@ public class AgendamentoView extends BaseFormulario {
         txtNomePaciente.setText(null);
     }
 
-   
 }
