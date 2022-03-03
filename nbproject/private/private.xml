@@ -3,9 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/edsonmarcks/NetBeansProjects/Clinica/src/modelo/utils/StatusAgendamento.java</file>
-            <file>file:/home/edsonmarcks/NetBeansProjects/Clinica/src/controller/ModeloTableGenerica.java</file>
-            <file>file:/home/edsonmarcks/NetBeansProjects/Clinica/src/views/MedicoView.java</file>
+            <file>file:/home/devlinux/NetBeansProjects/curso_edinaldo/src/modelo/dao/AgendamentoDao.java</file>
+            <file>file:/home/devlinux/NetBeansProjects/curso_edinaldo/src/views/AgendamentoView.java</file>
         </group>
     </open-files>
 </project-private>
